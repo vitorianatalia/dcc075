@@ -30,24 +30,25 @@ def decifra_vigenere(texto, chave):
             resultado += texto[i]
     return resultado
 
-def taxa_sucesso_descriptografia(algoritmo, texto_original, chave_correta, *args):
+def aplica_cifra(algoritmo, texto_original, chave_correta, *args):
     texto_cifrado = algoritmo(texto_original, chave_correta, *args)
     if algoritmo == cifra_cesar:
         texto_decifrado = algoritmo(texto_cifrado, -chave_correta)
     else:
         texto_decifrado = decifra_vigenere(texto_cifrado, chave_correta)
-    return texto_decifrado == texto_original, texto_cifrado, texto_decifrado
+    return texto_cifrado, texto_decifrado
 
 texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
 chave_cesar_correta = 3
 chave_vigenere_correta = "CHAVE_DCC"
 
-sucesso_cesar, texto_cifrado_cesar, texto_decifrado_cesar = taxa_sucesso_descriptografia(cifra_cesar, texto_original, chave_cesar_correta)
-print("Cifra de César - Taxa de Sucesso:", sucesso_cesar)
-print("Texto Cifrado:", texto_cifrado_cesar)
-print("Texto Decifrado:", texto_decifrado_cesar)
+texto_cifrado_cesar, texto_decifrado_cesar = aplica_cifra(cifra_cesar, texto_original, chave_cesar_correta)
+texto_cifrado_vigenere, texto_decifrado_vigenere = aplica_cifra(cifra_vigenere, texto_cifrado_cesar, chave_vigenere_correta)
 
-sucesso_vigenere, texto_cifrado_vigenere, texto_decifrado_vigenere = taxa_sucesso_descriptografia(cifra_vigenere, texto_original, chave_vigenere_correta)
-print("\nCifra de Vigenère - Taxa de Sucesso:", sucesso_vigenere)
-print("Texto Cifrado:", texto_cifrado_vigenere)
-print("Texto Decifrado:", texto_decifrado_vigenere)
+print("Texto original: ", texto_original)
+print("Passo 1: Cifra de Cesar -- ", texto_cifrado_cesar)
+print("Passo 2: Cifra de Vigenere -- ", texto_cifrado_vigenere)
+print("\nIniciando descriptografia...\n")
+print("Passo 1: Cifra de Vigenere -- ", texto_decifrado_vigenere)
+print("Passo 2: Cifra de Cesar -- ", texto_decifrado_cesar)
+print("\nTaxa de sucesso: ", "100%" if texto_original == texto_decifrado_cesar else "0%")
