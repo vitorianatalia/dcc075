@@ -28,7 +28,7 @@ class TestCifras(unittest.TestCase):
         self.assertEqual(texto_decifrado, texto_original)
 
     def test_cifra_transposicao(self):
-        texto_original = "Hello World!"
+        texto_original = self.conteudo
         chave_correta = [3, 1, 2]
 
         texto_cifrado = cifra_transposicao(texto_original, chave_correta)
