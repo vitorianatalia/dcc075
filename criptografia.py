@@ -98,7 +98,14 @@ def aplica_cifra(algoritmo, texto_original, chave_correta, *args):
         texto_decifrado = decifra_transposicao(texto_cifrado, chave_correta)
     return texto_cifrado, texto_decifrado
 
-texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
+
+
+with open('file.txt', 'r') as arquivo:
+    conteudo = arquivo.read()
+
+#texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
+texto_original = conteudo
+
 chave_cesar_correta = 3
 chave_vigenere_correta = "CHAVE_DCC"
 chave_transposicao_correta = [3, 1, 2]
@@ -107,6 +114,7 @@ print("chave", chave_transposicao_correta)
 texto_cifrado_cesar, texto_decifrado_cesar = aplica_cifra(cifra_cesar, texto_original, chave_cesar_correta)
 texto_cifrado_vigenere, texto_decifrado_vigenere = aplica_cifra(cifra_vigenere, texto_cifrado_cesar, chave_vigenere_correta)
 texto_cifrado_transposicao, texto_decifrado_transposicao = aplica_cifra(cifra_transposicao, texto_cifrado_vigenere, chave_transposicao_correta)
+
 print("\nIniciando criptografia...\n")
 print("Texto original: ", texto_original)
 print("Passo 1: Cifra de Cesar -- ", texto_cifrado_cesar)
