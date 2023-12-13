@@ -1,3 +1,12 @@
+import time 
+
+def medir_tempo_execucao(algoritmo, texto, chave, *args):
+    inicio = time.time()
+    resultado = algoritmo(texto, chave, *args)
+    fim = time.time()
+    tempo_execucao = fim - inicio
+    return resultado, tempo_execucao
+
 def cifra_cesar(texto, chave):
     resultado = ''
     for char in texto:
@@ -87,17 +96,22 @@ def aplica_cifra(algoritmo, texto_original, chave_correta, *args):
 with open('file.txt', 'r') as arquivo:
     conteudo = arquivo.read()
 
-texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
-#texto_original = conteudo
+# texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
+texto_original = conteudo
 
 chave_cesar_correta = 3
 chave_vigenere_correta = "CHAVE_DCC"
 chave_transposicao_correta = [3, 1, 2]
 print("chave", chave_transposicao_correta)
 
+algoritmo_inicio = time.time()
 texto_cifrado_cesar, texto_decifrado_cesar = aplica_cifra(cifra_cesar, texto_original, chave_cesar_correta)
 texto_cifrado_vigenere, texto_decifrado_vigenere = aplica_cifra(cifra_vigenere, texto_cifrado_cesar, chave_vigenere_correta)
 texto_cifrado_transposicao, texto_decifrado_transposicao = aplica_cifra(cifra_transposicao, texto_cifrado_vigenere, chave_transposicao_correta)
+algoritmo_fim = time.time()
+
+with open ('cifrado.txt', 'w') as arquivo:
+    arquivo.write(texto_cifrado_transposicao)
 
 print("\nIniciando criptografia...\n")
 print("Texto original: ", texto_original)
@@ -110,3 +124,10 @@ print("Passo 2: Cifra de Vigenere -- ", texto_decifrado_vigenere)
 print("Passo 3: Cifra de Cesar -- ", texto_decifrado_cesar)
 print("\nTaxa de sucesso: ", "100%" if texto_original == texto_decifrado_cesar else "0%")
 
+print("Tempo de execucao do algoritmo híbrido: ", algoritmo_fim - algoritmo_inicio)
+texto_cifrado_cesar, tempo_execucao_cesar = medir_tempo_execucao(cifra_cesar, texto_original, chave_cesar_correta)
+print("\nTempo de execucao da cifra de Cesar: ", tempo_execucao_cesar)
+texto_cifrado_vigenere, tempo_execucao_vigenere = medir_tempo_execucao(cifra_vigenere, texto_original, chave_vigenere_correta)
+print("Tempo de execucao da cifra de Vigenere: ", tempo_execucao_vigenere)
+texto_cifrado_transposicao, tempo_execucao_transposicao = medir_tempo_execucao(cifra_transposicao, texto_original, chave_transposicao_correta)
+print("Tempo de execucao da cifra de Transposicao: ", tempo_execucao_transposicao)
