@@ -31,62 +31,46 @@ def decifra_vigenere(texto, chave):
     return resultado
 
 def cifra_transposicao(texto, chave):
-    texto_sem_espacos = ''.join(texto.split())
-    print(chave)
     num_colunas = len(chave)
-    num_linhas = -(-len(texto_sem_espacos) // num_colunas)
+    num_linhas = -(-len(texto) // num_colunas)
     matriz = [[' ' for _ in range(num_colunas)] for _ in range(num_linhas)]
 
-    for i, char in enumerate(texto_sem_espacos):
+    for i, char in enumerate(texto):
         linha = i // num_colunas
         coluna = i % num_colunas
         matriz[linha][coluna] = char
 
     texto_cifrado = ''
-    for coluna in range(num_colunas):
-        indice_chave = chave.index(coluna + 1)
-        texto_cifrado += ''.join(matriz[linha][indice_chave] for linha in range(num_linhas))
-    
+    for num in chave:
+        indice_chave = num - 1
+        for linha in matriz:
+            texto_cifrado += linha[indice_chave]
 
-    texto_cifrado_final = ''
-    j = 0
-    for i, char in enumerate(texto):
-        if char.isalpha():
-            texto_cifrado_final += texto_cifrado[j]
-            j += 1
-        else:
-            texto_cifrado_final += ' '
-
-    return texto_cifrado_final
+    return texto_cifrado
 
 def decifra_transposicao(texto_cifrado, chave):
-    texto_sem_espacos = ''.join(texto_cifrado.split())
     num_colunas = len(chave)
-    num_linhas = -(-len(texto_sem_espacos) // num_colunas)
+    num_linhas = -(-len(texto_cifrado) // num_colunas)
     matriz = [[' ' for _ in range(num_colunas)] for _ in range(num_linhas)]
 
-    # Preencher a matriz com o texto cifrado
-    for i, char in enumerate(texto_sem_espacos):
-        linha = i % num_linhas
-        coluna = i // num_linhas
-        matriz[linha][coluna] = char
+    chars_per_column = [0] * num_colunas
+    for i in range(len(texto_cifrado)):
+        coluna = i % num_colunas
+        chars_per_column[coluna] += 1
 
-    # Criar a string decifrada ao ler a matriz por linhas usando a chave
+    index = 0
+    for coluna in sorted(range(num_colunas), key=lambda x: chave[x]):
+        for linha in range(chars_per_column[coluna]):
+            if index < len(texto_cifrado):
+                matriz[linha][coluna] = texto_cifrado[index]
+                index += 1
+
     texto_decifrado = ''
-    for linha in range(num_linhas):
-        for coluna in range(num_colunas):
-            texto_decifrado += matriz[linha][chave[coluna] - 1]
+    for i in range(num_linhas):
+        for j in chave:
+            texto_decifrado += matriz[i][j-1]
 
-    texto_decifrado_final = ''
-    j = 0
-    for i, char in enumerate(texto_cifrado):
-        if char.isalpha():
-            texto_decifrado_final += texto_decifrado[j]
-            j += 1
-        else:
-            texto_decifrado_final += ' '
-
-    return texto_decifrado_final
+    return texto_decifrado.rstrip()
 
 def aplica_cifra(algoritmo, texto_original, chave_correta, *args):
     texto_cifrado = algoritmo(texto_original, chave_correta, *args)
@@ -103,8 +87,8 @@ def aplica_cifra(algoritmo, texto_original, chave_correta, *args):
 with open('file.txt', 'r') as arquivo:
     conteudo = arquivo.read()
 
-#texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
-texto_original = conteudo
+texto_original = "Algoritmo combinado de Cifra de Cesar e Cifra de Vigenere"
+#texto_original = conteudo
 
 chave_cesar_correta = 3
 chave_vigenere_correta = "CHAVE_DCC"
